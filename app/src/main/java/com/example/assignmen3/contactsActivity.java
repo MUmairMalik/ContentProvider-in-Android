@@ -11,17 +11,15 @@ import android.provider.ContactsContract;
 import java.util.ArrayList;
 import java.util.List;
 
-public class contacts extends AppCompatActivity {
-    List<String> name ;
-    List<String> phone ;
+public class contactsActivity extends AppCompatActivity {
+    List<Contacts> contact ;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
-        name = new ArrayList<String>();
-        phone = new ArrayList<String>();
+        contact = new ArrayList<Contacts>();
        /* Cursor cursor=getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,null,null,null);
 
         if(cursor!=null) {
@@ -35,30 +33,29 @@ public class contacts extends AppCompatActivity {
             }
         }
 */
-        String s=new String("Ali");
-        name.add(s);
-        s=new String("123");
-        phone.add(s);
-        s=new String("Ali1");
-        name.add(s);
-        s=new String("234");
-        phone.add(s);
-        s=new String("wes");
-        name.add(s);
-        s=new String("432");
-        phone.add(s);
-        s=new String("Aqq");
-        name.add(s);
-        s=new String("5432");
-        phone.add(s);
-        s=new String("ytre");
-        name.add(s);
-        s=new String("234");
-        phone.add(s);
+       Contacts c=new Contacts("ahmn","56789");
+       contact.add(c);
+        c=new Contacts("ahmn1","56789");
+        contact.add(c);
+        c=new Contacts("ahmn2","56789");
 
+        contact.add(c);
+        c=new Contacts("ahm3n","56789");
+
+        contact.add(c);
+        c=new Contacts("ahm4n","56789");
+        contact.add(c);
+        c=new Contacts("ahm5n","56789");
+        contact.add(c);
+        c=new Contacts("ahm6n","56789");
+        contact.add(c);
+        c=new Contacts("ahm5n","56789");
+        contact.add(c);
+        c=new Contacts("ahm6n","56789");
+        contact.add(c);
         RecyclerView list=findViewById(R.id.recycle);
         list.setLayoutManager(new LinearLayoutManager(this));
-        list.setAdapter(new RAdapter(name,phone));
+        list.setAdapter(new RAdapter(contact));
 
 
 

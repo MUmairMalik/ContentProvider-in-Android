@@ -52,7 +52,7 @@ public class MainActivity extends androidx.appcompat.app.AppCompatActivity{
                    editor.putBoolean("checkbox", cb.isChecked());
                    editor.commit();
                 }
-                Intent i=new Intent(MainActivity.this,contacts.class);
+                Intent i=new Intent(MainActivity.this, contactsActivity.class);
                 startActivity(i);
 
             }

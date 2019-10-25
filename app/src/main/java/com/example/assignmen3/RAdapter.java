@@ -15,11 +15,9 @@ import java.util.List;
 
 public class RAdapter extends RecyclerView.Adapter<RAdapter.RViewHolder>{
 
-    List<String> name;
-    List<String> number;
-    public RAdapter(List<String> nam, List<String> numb) {
-        name=nam;
-        number=numb;
+    List<Contacts> contactss;
+    public RAdapter(List<Contacts> c) {
+        contactss=c;
     }
 
     @NonNull
@@ -32,15 +30,15 @@ public class RAdapter extends RecyclerView.Adapter<RAdapter.RViewHolder>{
 
     @Override
     public void onBindViewHolder(RViewHolder holder, int position) {
-                String title=name.get(position);
+                String title=contactss.get(position).name;
                 holder.naam.setText(title);
-                title = number.get(position);
+                title =contactss.get(position).phone ;
                 holder.num.setText(title);
     }
 
     @Override
     public int getItemCount() {
-        return name.size();
+        return contactss.size();
     }
 
     public class RViewHolder extends RecyclerView.ViewHolder{
@@ -52,6 +50,7 @@ public class RAdapter extends RecyclerView.Adapter<RAdapter.RViewHolder>{
 
             public RViewHolder(@NonNull View itemView) {
                 super(itemView);
+                Iv=itemView.findViewById(R.id.imgIcon);
                 naam=itemView.findViewById(R.id.nameTxt);
                 num=itemView.findViewById(R.id.numTxt);
 

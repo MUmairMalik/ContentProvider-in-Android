@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Assignmen3</string>
+    <string name="toastCheck">Item Clicked</string>
 </resources>

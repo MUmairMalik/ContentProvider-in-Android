@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.view.menu.MenuView;
@@ -16,9 +17,13 @@ import java.util.List;
 public class RAdapter extends RecyclerView.Adapter<RAdapter.RViewHolder>{
 
     List<Contacts> contactss;
-    public RAdapter(List<Contacts> c) {
+    OnItemClickListener listener;
+
+    public RAdapter(List<Contacts> c,OnItemClickListener listener) {
+        this.listener = listener;
         contactss=c;
     }
+
 
     @NonNull
     @Override
@@ -28,12 +33,19 @@ public class RAdapter extends RecyclerView.Adapter<RAdapter.RViewHolder>{
         return new RViewHolder(view);
     }
 
+
+    public interface OnItemClickListener {
+        void onItemClick(Contacts item);
+    }
+
     @Override
     public void onBindViewHolder(RViewHolder holder, int position) {
                 String title=contactss.get(position).name;
                 holder.naam.setText(title);
                 title =contactss.get(position).phone ;
                 holder.num.setText(title);
+                holder.bind(contactss.get(position),listener);
+
     }
 
     @Override
@@ -43,8 +55,8 @@ public class RAdapter extends RecyclerView.Adapter<RAdapter.RViewHolder>{
 
     public class RViewHolder extends RecyclerView.ViewHolder{
            ImageView Iv;
-           EditText naam;
-           EditText num;
+           TextView naam;
+           TextView num;
 
 
 
@@ -56,6 +68,15 @@ public class RAdapter extends RecyclerView.Adapter<RAdapter.RViewHolder>{
 
 
             }
+
+        public void bind(final Contacts item, final OnItemClickListener listener) {
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    listener.onItemClick(item);
+                }
+            });
+        }
         }
 
 }

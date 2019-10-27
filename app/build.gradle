@@ -29,4 +29,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     //dependency for recycle view
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    //intent passing
+    implementation 'com.google.code.gson:gson:2.8.5'
+
 }

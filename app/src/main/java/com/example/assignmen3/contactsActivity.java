@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
 
 import android.Manifest;
 import android.content.ContentResolver;
@@ -14,6 +16,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -33,10 +37,10 @@ public class contactsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
         contact = new ArrayList<Contacts>();
+        ContactDatabase db = Room.databaseBuilder(getApplicationContext(),ContactDatabase.class, "contactdb").allowMainThreadQueries().build();
+
         Cursor cur = null;
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            // cur = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null);
-
 
             ContentResolver cr = getContentResolver();
             cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
@@ -57,7 +61,8 @@ public class contactsActivity extends AppCompatActivity {
                         while (pCur.moveToNext()) {
                             String phoneNo = pCur.getString(pCur.getColumnIndex(
                                     ContactsContract.CommonDataKinds.Phone.NUMBER));
-                            Contacts cn = new Contacts(name, phoneNo);
+                            String email=getEmail(id);
+                            Contacts cn = new Contacts(name, phoneNo,email);
                             contact.add(cn);
 
                         }
@@ -66,86 +71,22 @@ public class contactsActivity extends AppCompatActivity {
 
 
                 }
-            }
+
+
+          }
+            db.contactDao().insert(contact);
+
         } else {
             requestPermission();
         }
-        if (cur == null) {
-        /*    ContentResolver cr = getContentResolver();
-            // String id = cur.getString(
-            //       cur.getColumnIndex(ContactsContract.Contacts._ID));
-            cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
 
-            String id = cur.getString(
-                    cur.getColumnIndex(ContactsContract.Contacts._ID));
-
-            String name = cur.getString(cur.getColumnIndex(
-                    ContactsContract.Contacts.DISPLAY_NAME));
-            if (cur.getInt(cur.getColumnIndex(
-                    ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
-                Cursor pCur = cr.query(
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                        null,
-                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                        new String[]{id}, null);
-
-                while (pCur.moveToNext()) {
-                    String phoneNo = pCur.getString(pCur.getColumnIndex(
-                            ContactsContract.CommonDataKinds.Phone.NUMBER));
-                    Contacts cn = new Contacts(name, phoneNo);
-                    contact.add(cn);
-                }
-                pCur.close();
-            }
-
-
-
-
-*/
-
-
-
-            /*cursor.moveToFirst();
-                while (cursor.moveToNext()) {
-                    String n = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                    String p = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                    Contacts cc = new Contacts(n, p);
-                    contact.add(cc);
-                }
-
-
-/*
-       Contacts c=new Contacts("ahmn","56789");
-       contact.add(c);
-        c=new Contacts("ahmn1","56789");
-        contact.add(c);
-        c=new Contacts("ahmn2","56789");
-
-        contact.add(c);
-        c=new Contacts("ahm3n","56789");
-
-        contact.add(c);
-        c=new Contacts("ahm4n","56789");
-        contact.add(c);
-        c=new Contacts("ahm5n","56789");
-        contact.add(c);
-        c=new Contacts("ahm6n","56789");
-        contact.add(c);
-        c=new Contacts("ahm5n","56789");
-        contact.add(c);
-        c=new Contacts("ahm6n","56789");
-        contact.add(c);
-*/
-        }
-
-
+        contact=db.contactDao().getAllContacts();
         RecyclerView list = findViewById(R.id.recycle);
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setAdapter(new RAdapter(contact, new RAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Contacts item) {
 
-                Toast.makeText(contactsActivity.this , (String) "chceking", Toast.LENGTH_LONG).show();
                 Gson gson = new Gson();
                 Intent intent=new Intent(contactsActivity.this,ViewContact.class);
                 String myJson = gson.toJson(item);
@@ -154,6 +95,16 @@ public class contactsActivity extends AppCompatActivity {
 
             }
         }));
+
+        Button bt=findViewById(R.id.button_addNew);
+        bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(contactsActivity.this,AddingNew.class);
+                startActivity(i);
+
+            }
+        });
 
 
     }
@@ -170,46 +121,22 @@ public class contactsActivity extends AppCompatActivity {
                     REQUEST_READ_CONTACTS);
         }
     }
-/*
 
+    public String getEmail(String contactId) {
+        String emailStr = "";
+        final String[] projection = new String[]{ContactsContract.CommonDataKinds.Email.DATA,
+                ContactsContract.CommonDataKinds.Email.TYPE};
 
-    private ArrayList getAllContacts() {
-        ArrayList<String> nameList = new ArrayList<>();
-        ContentResolver cr = getContentResolver();
-        Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
-                null, null, null, null);
-        if ((cur != null ? cur.getCount() : 0) > 0) {
-            while (cur != null && cur.moveToNext()) {
-                String id = cur.getString(
-                        cur.getColumnIndex(ContactsContract.Contacts._ID));
-                String name = cur.getString(cur.getColumnIndex(
-                        ContactsContract.Contacts.DISPLAY_NAME));
-                nameList.add(name);
+        Cursor emailq = getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, projection, ContactsContract.Data.CONTACT_ID + "=?", new String[]{contactId}, null);
 
-                if (cur.getInt(cur.getColumnIndex(
-                        ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
-                    Cursor pCur = cr.query(
-                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                            null,
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                            new String[]{id}, null);
-                    while (pCur.moveToNext()) {
-                        String phoneNo = pCur.getString(pCur.getColumnIndex(
-                                ContactsContract.CommonDataKinds.Phone.NUMBER));
-                        numberArray.add(phoneNo);
+        if (emailq.moveToFirst()) {
+            final int contactEmailColumnIndex = emailq.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA);
 
-                    }
-                    pCur.close();
-                }
+            while (!emailq.isAfterLast()) {
+                emailStr = emailStr + emailq.getString(contactEmailColumnIndex);
+                emailq.moveToNext();
             }
         }
-        if (cur != null) {
-            cur.close();
-        }
-        return nameList;
+        return emailStr;
     }
-
-*/
-
-
 }

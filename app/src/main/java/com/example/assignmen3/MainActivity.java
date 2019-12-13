@@ -54,8 +54,13 @@ public class MainActivity extends androidx.appcompat.app.AppCompatActivity{
                 }
                 Intent i=new Intent(MainActivity.this, contactsActivity.class);
                 startActivity(i);
-
             }
         });
         }
+
+
+
+
+
+
     }

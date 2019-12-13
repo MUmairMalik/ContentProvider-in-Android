@@ -2,13 +2,26 @@
 <LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:background="@drawable/res"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+   >
     xmlns:android="http://schemas.android.com/apk/res/android" />
 <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="550dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/recycle">
 
 
 </androidx.recyclerview.widget.RecyclerView>
+    <Button
+        android:layout_width="wrap_content"
+        android:background="@drawable/roundbutton"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:padding="5dp"
+        android:id="@+id/button_addNew"
+        android:text="Add a new contact">
+
+    </Button>
 </LinearLayout>
